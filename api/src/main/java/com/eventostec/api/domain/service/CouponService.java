@@ -3,6 +3,7 @@ package com.eventostec.api.domain.service;
 import com.eventostec.api.domain.coupon.Coupon;
 import com.eventostec.api.domain.coupon.CouponRequestDTO;
 import com.eventostec.api.domain.event.Event;
+import com.eventostec.api.exceptions.EventNotFoundException;
 import com.eventostec.api.repositories.CouponRepository;
 import com.eventostec.api.repositories.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ public class CouponService {
 
     public Coupon addCoupontoEvent(UUID eventId, CouponRequestDTO couponData){
         Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new RuntimeException("Event not found"));
+                .orElseThrow(EventNotFoundException::new);
 
         Coupon coupon = new Coupon();
         coupon.setCode(couponData.code());

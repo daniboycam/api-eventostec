@@ -55,7 +55,7 @@ public class EventController {
         return ResponseEntity.ok(filteredEvents);
     }
 
-    @GetMapping("{eventId}")
+    @GetMapping("/{eventId}")
     public ResponseEntity <EventDetailsDTO> getEventDetails(@PathVariable UUID eventId){
         EventDetailsDTO eventDetailsDTO = this.eventService.getEventDetails(eventId);
         return ResponseEntity.ok(eventDetailsDTO);

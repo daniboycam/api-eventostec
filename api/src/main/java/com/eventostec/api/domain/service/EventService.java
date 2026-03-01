@@ -6,6 +6,8 @@ import com.eventostec.api.domain.event.Event;
 import com.eventostec.api.domain.event.EventDetailsDTO;
 import com.eventostec.api.domain.event.EventRequestDTO;
 import com.eventostec.api.domain.event.EventResponseDTO;
+import com.eventostec.api.exceptions.EventNotFoundException;
+import com.eventostec.api.exceptions.InvalidImageDataException;
 import com.eventostec.api.repositories.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -46,9 +48,12 @@ public class EventService {
 
     public Event createEvent(EventRequestDTO data){
         String imgUrl = null;
-        if(data.image() != null){
+        if(data.image() != null) {
             imgUrl = this.uploadImg(data.image());
         }
+                if(imgUrl == null){
+                    throw new InvalidImageDataException();
+                }
 
         Event newEvent = new Event();
         newEvent.setTitle(data.title());
@@ -109,7 +114,7 @@ public class EventService {
 
     public EventDetailsDTO getEventDetails(UUID eventId){
         Event event = this.repository.findById(eventId)
-                .orElseThrow(() -> new RuntimeException("Event nor found."));
+                .orElseThrow(EventNotFoundException::new);
 
         List<Coupon> coupons = couponService.consultCoupons(eventId, new Date());
 
